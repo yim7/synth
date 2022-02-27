@@ -89,6 +89,8 @@ func (w *Window) DrawText(text string, font *Font, r image.Rectangle, c color.RG
 	}
 	defer texture.Destroy()
 
+	// todo: default centered layout
+	// todo: text out of bounds
 	rect := sdl.Rect{
 		X: int32(r.Min.X+r.Dx()/2) - surface.W/2,
 		Y: int32(r.Min.Y+r.Dy()/2) - surface.H/2,
@@ -97,4 +99,32 @@ func (w *Window) DrawText(text string, font *Font, r image.Rectangle, c color.RG
 	}
 
 	w.r.Copy(texture, nil, &rect)
+}
+
+func (w *Window) HandleEvent(e sdl.Event) {
+	switch e := e.(type) {
+	case *sdl.KeyboardEvent:
+		t := e.Type
+		key := sdl.GetKeyName(e.Keysym.Sym)
+		for _, v := range w.views {
+			if r, ok := v.(KeyEventResponder); ok {
+				if t == sdl.KEYDOWN {
+					r.KeyDown(key)
+				} else {
+					r.KeyUp(key)
+				}
+			}
+		}
+	case *sdl.MouseButtonEvent:
+		t := e.Type
+		for _, v := range w.views {
+			if r, ok := v.(MouseEventResponder); ok {
+				if t == sdl.KEYDOWN {
+					r.MouseDown()
+				} else {
+					r.MouseUp()
+				}
+			}
+		}
+	}
 }

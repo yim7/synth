@@ -44,6 +44,7 @@ loop:
 				app.quit = true
 				break loop
 			default:
+				app.window.HandleEvent(e)
 				// log.Println("todo handle event:", e)
 			}
 		}

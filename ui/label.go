@@ -40,6 +40,10 @@ func (view *TextLabel) SetFontSize(size int) {
 	view.font = font
 }
 
+func (view *TextLabel) FontSize() int {
+	return view.font.size
+}
+
 func (view *TextLabel) Frame() image.Rectangle {
 	return view.frame
 }

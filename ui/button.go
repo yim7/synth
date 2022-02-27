@@ -9,10 +9,12 @@ type Button struct {
 	frame      image.Rectangle
 	background color.RGBA
 	*TextLabel
+	*Control
 }
 
 func NewButton(text string, frame image.Rectangle) *Button {
-	labelFrame := image.Rect(0, 0, frame.Dx(), frame.Dy())
+	margin := 5
+	labelFrame := image.Rect(margin, margin, frame.Dx()-margin, frame.Dy()-margin)
 	label := NewTextLabel(text, labelFrame)
 	label.SetColor(BlueColor)
 
@@ -20,6 +22,7 @@ func NewButton(text string, frame image.Rectangle) *Button {
 		frame:      frame,
 		background: SilverColor,
 		TextLabel:  label,
+		Control:    NewControl(),
 	}
 }
 
