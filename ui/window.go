@@ -79,15 +79,14 @@ func (w *Window) DrawRect(r image.Rectangle, c color.RGBA) {
 }
 
 func (w *Window) DrawText(text string, font *Font, r image.Rectangle, c color.RGBA) {
-	surface, err := font.RenderUTF8Blended(text, sdl.Color(c))
-	if err != nil {
-		log.Fatal(err)
+	if font == nil {
+		log.Println("font is missing")
+		return
 	}
+
+	surface, _ := font.RenderUTF8Blended(text, sdl.Color(c))
 	defer surface.Free()
-	texture, err := w.r.CreateTextureFromSurface(surface)
-	if err != nil {
-		log.Fatal(err)
-	}
+	texture, _ := w.r.CreateTextureFromSurface(surface)
 	defer texture.Destroy()
 
 	// todo: default centered layout
