@@ -34,6 +34,10 @@ func (view *Button) Frame() image.Rectangle {
 	return view.frame
 }
 
+func (view *Button) SetFrame(frame image.Rectangle) {
+	view.frame = frame
+}
+
 func (view *Button) Draw(offset image.Point) {
 	w := App.window
 	rect := view.frame.Add(offset)

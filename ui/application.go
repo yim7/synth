@@ -5,6 +5,7 @@ import (
 	"sync"
 
 	"github.com/veandco/go-sdl2/sdl"
+	"github.com/yim7/synth/ui/events"
 )
 
 type Application struct {
@@ -36,15 +37,35 @@ func NewApplication() *Application {
 func (app *Application) Run() {
 loop:
 	for !app.quit {
-		app.window.Renderer()
+		window := app.window
+		window.Renderer()
 
 		for e := sdl.PollEvent(); e != nil; e = sdl.PollEvent() {
-			switch e.(type) {
+			switch e := e.(type) {
 			case *sdl.QuitEvent:
 				app.quit = true
 				break loop
+			case *sdl.KeyboardEvent:
+				event := events.SDLEventToKeyboardEvent(e)
+				if event.Type == events.KeyDown {
+					log.Println("key down:", event)
+					window.KeyDown(event)
+				} else {
+					log.Println("key up:", event)
+					window.KeyUp(event)
+				}
+			case *sdl.MouseButtonEvent, *sdl.MouseMotionEvent:
+				event := events.SDLEventToMouseEvent(e)
+				// log.Println("mouse event:", event)
+				switch event.Type {
+				case events.MouseDown:
+					window.MouseDown(event)
+				case events.MouseUp:
+					window.MouseUp(event)
+				case events.MouseMove:
+					window.MouseMove(event)
+				}
 			default:
-				app.window.HandleEvent(e)
 				// log.Println("todo handle event:", e)
 			}
 		}

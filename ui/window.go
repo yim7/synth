@@ -7,6 +7,7 @@ import (
 	"sync"
 
 	"github.com/veandco/go-sdl2/sdl"
+	"github.com/yim7/synth/ui/events"
 )
 
 type Window struct {
@@ -101,30 +102,51 @@ func (w *Window) DrawText(text string, font *Font, r image.Rectangle, c color.RG
 	w.r.Copy(texture, nil, &rect)
 }
 
-func (w *Window) HandleEvent(e sdl.Event) {
-	switch e := e.(type) {
-	case *sdl.KeyboardEvent:
-		t := e.Type
-		key := sdl.GetKeyName(e.Keysym.Sym)
-		for _, v := range w.views {
-			if r, ok := v.(KeyEventResponder); ok {
-				if t == sdl.KEYDOWN {
-					r.KeyDown(key)
-				} else {
-					r.KeyUp(key)
-				}
-			}
+// window keyboard event
+func (w *Window) KeyDown(e *events.KeyboardEvent) {
+	for _, v := range w.views {
+		if r, ok := v.(events.KeyboardEventResponder); ok {
+			r.KeyDown(e)
 		}
-	case *sdl.MouseButtonEvent:
-		t := e.Type
-		for _, v := range w.views {
-			if r, ok := v.(MouseEventResponder); ok {
-				if t == sdl.KEYDOWN {
-					r.MouseDown()
-				} else {
-					r.MouseUp()
-				}
-			}
+	}
+}
+
+func (w *Window) KeyUp(e *events.KeyboardEvent) {
+	for _, v := range w.views {
+		if r, ok := v.(events.KeyboardEventResponder); ok {
+			r.KeyUp(e)
 		}
+	}
+}
+
+// window mouse event
+func (w *Window) MouseResponder(e *events.MouseEvent) events.MouseEventResponder {
+	for _, v := range w.views {
+		in := e.Point.In(v.Frame())
+		if r, ok := v.(events.MouseEventResponder); ok && in {
+			return r
+		}
+	}
+	return nil
+}
+
+func (w *Window) MouseDown(e *events.MouseEvent) {
+	r := w.MouseResponder(e)
+	if r != nil {
+		r.MouseDown(e)
+	}
+}
+
+func (w *Window) MouseUp(e *events.MouseEvent) {
+	r := w.MouseResponder(e)
+	if r != nil {
+		r.MouseUp(e)
+	}
+}
+
+func (w *Window) MouseMove(e *events.MouseEvent) {
+	r := w.MouseResponder(e)
+	if r != nil {
+		r.MouseMove(e)
 	}
 }
