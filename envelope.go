@@ -14,7 +14,6 @@ type Envelope struct {
 	sampleRate      float64
 	attack          float64
 	decay           float64
-	sustain         float64
 	sustainLevel    float64
 	release         float64
 	phase           Phase
