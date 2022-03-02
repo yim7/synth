@@ -49,6 +49,10 @@ func (view *TextLabel) Frame() image.Rectangle {
 }
 
 func (view *TextLabel) Draw(offset image.Point) {
+	if len(view.text) == 0 {
+		return
+	}
+
 	w := App.window
 	rect := view.frame.Add(offset)
 

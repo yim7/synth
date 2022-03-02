@@ -10,8 +10,8 @@ import (
 
 type Application struct {
 	window *Window
-	sync.Mutex
-	quit bool
+	m      sync.Mutex
+	quit   bool
 }
 
 var (
@@ -73,10 +73,15 @@ loop:
 }
 
 func (app *Application) SetWindow(w *Window) {
-	app.Lock()
-	defer app.Unlock()
+	app.m.Lock()
+	defer app.m.Unlock()
 	app.window = w
 }
+
+// func (app *Application) RunWithWindow(w *Window) {
+// 	app.SetWindow(w)
+// 	app.Run()
+// }
 
 func (app *Application) Destory() {
 	app.window.Destory()

@@ -15,7 +15,7 @@ type Window struct {
 	views []View
 	w     *sdl.Window
 	r     *sdl.Renderer
-	sync.Mutex
+	m     sync.Mutex
 }
 
 func NewWindow(title string, frame image.Rectangle) *Window {
@@ -45,8 +45,8 @@ func (w *Window) Destory() {
 }
 
 func (w *Window) AddView(views ...View) {
-	w.Lock()
-	defer w.Unlock()
+	w.m.Lock()
+	defer w.m.Unlock()
 	w.views = append(w.views, views...)
 }
 
