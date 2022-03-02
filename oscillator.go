@@ -36,7 +36,7 @@ type Oscillator struct {
 	phase      float64
 }
 
-func NewOscillator(frequency float64, sampleRate float64, waveForm WaveFormGenerator) *Oscillator {
+func NewOscillator(frequency, sampleRate float64, waveForm WaveFormGenerator) *Oscillator {
 	o := &Oscillator{
 		frequency:  frequency,
 		sampleRate: sampleRate,

@@ -11,9 +11,10 @@ import (
 func main() {
 	window := ui.NewWindow("Synthesizer", image.Rect(0, 0, 600, 400))
 
-	osci := NewOscillator(440, 44100, Sine)
-	adsr := NewEnvelope(0.01, 0.1, 0.5, 0.1, 44100)
-	adsr.SetInput(osci)
+	// osci := NewOscillator(440, 44100, Sine)
+	input := NewHarmonics(440, 44100, []float64{2, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1})
+	adsr := NewEnvelope(0.01, 0.5, 0.3, 0.2, 44100)
+	adsr.SetInput(input)
 
 	output, _ := OpenAudioPlayer(44100, 1)
 	output.Resume()
@@ -33,7 +34,7 @@ func main() {
 		button := ui.NewButton("", image.Rect(w*i, h, w*(i+1), 400))
 		freq := float64(440 + 30*i)
 		button.MouseDownAction = func(e *events.MouseEvent) {
-			osci.frequency = freq
+			input.SetFrequency(freq)
 			log.Println("key down")
 			adsr.NoteOn()
 		}
